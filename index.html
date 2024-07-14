@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="layer">
+        <span class="loader"></span>
+    </div>
+    
+<div class="sidebar">
+    <div class="innersidebar1">
+
+        <div class="links">
+            <a href="#search">Search</a>
+            <a href="#categories">Categories</a>
+            <a href="#Area">Area</a>
+            <a href="#ingredients">Ingredients</a>
+            <a href="#contact">Contact us</a>
+        </div>
+
+        <div class="footer">
+          <span><i class="fa-brands fa-facebook text-light"></i></span>
+          <span><i class="fa-brands fa-twitter text-light"></i></span>
+          <span><i class="fa-solid fa-globe text-light"></i></span>
+          <p class="text-light">Copyright Â© 2019 All Rights
+            Reserved.</p>
+        </div>
+    </div>
+
+    <div class="innersidebar2">
+         <div class="sticker">
+            <img src="images/images/logo.png"  alt="logo">
+         </div>
+         <div class="closebtn ">
+            <i class="fa-solid fa-x fa-2x text-dark"></i>
+         </div>
+
+         <div class="icons d-flex flex-column">
+            <i class="fa-solid fa-globe pb-1 text-dark"></i>
+            <i class="fa-solid fa-share-nodes text-dark"></i>
+         </div>
+    </div>
+</div>
+
+
+<section >
+      <div class="container">
+        <div class="row defaultfood">
+            
+        </div>
+      </div>
+</section>
+
+
+
+<section >
+<div class="container">
+    <div class=" row d-none detailsdefaultfood" >
+       
+    </div>
+</div>
+</section>
+
+
+<section id="search">
+<div class="container">
+    <div class="row d-none  p-4">
+      
+            
+                <div class="col-md-6 p-2">
+                    <input type="text" id="searchname" class="form-control "  placeholder="Search by name">
+            </div>
+            <div class="col-md-6 p-2">
+                    <input type="text" class="form-control " id="searchletter" maxlength="1"  placeholder="Search by first letter">
+            </div>
+        
+            </div>
+
+            <div class="row searchbyname">
+               
+            </div>
+    </div>
+</section>
+
+
+
+<section id="Categories">
+<div class="container">
+    <div class="row foodcategory d-none">
+       
+    </div>
+</div>
+</section>
+
+<section >
+     <div class="container">
+        <div class="row d-none categorydetail">
+
+        </div>
+     </div>
+</section>
+
+
+<section id="Area">
+    <div class="container">
+        <div class="row d-none  Areadetail mt-5 p-2">
+               
+               
+               </div>
+        </div>
+     
+</section>
+
+
+<section id="ingredients">
+
+    <div class="container">
+        <div class="row d-none ingredientdetail">
+            
+            
+        </div>
+    </div>
+</section>
+
+
+
+<section id="contact">
+     <div class="container">
+        <div class="row contactdetails py-4 g-4 d-none">
+            <form action="" class="contact d-flex align-items-center justify-content-center min-vh-100 flex-wrap text-dark ">
+                <div class="container w-75 text-center">
+                        <div class="row g-4">
+                            <div class="col-md-6 pe-2 ">
+                                <input  id="name" type="text" class="form-control bg-light text-dark"  is-invalid placeholder="search by name">
+                                
+                                
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control bg-light text-dark" is-invalid placeholder="Enter your email">
+                               
+                            </div>
+                           
+                            <div class="col-md-6">
+                                <input id="phone" type="text" class="form-control text-dark bg-light" is-invalid placeholder="Enter your phone">
+                                
+                            </div>
+                          
+                            <div class="col-md-6">
+                                <input id="age" type="number" class="form-control text-dark bg-light" is-invalid placeholder="Enter your Age">
+                             
+                            </div>
+                          
+                            <div class="col-md-6">
+                                <input id="password"type="password" class="form-control bg-light text-dark" is-invalid placeholder="Enter your password">
+                              
+                            </div>
+                           
+                            <div class="col-md-6">
+                                <input id="repassword" type="password" class="form-control bg-light text-dark" is-invalid placeholder="Repassword">
+                               
+                            </div>
+                          
+                        </div>
+
+                        <button id="btnsubmit" disabled class="btn btn-outline-danger mx-auto mt-3 px-2">Submit</button>
+                </div>
+            </form>
+        </div>
+     </div>
+</section>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
