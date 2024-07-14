@@ -110,28 +110,28 @@ async function getdefaultFood() {
 
 
 async function getdetails(id){
-    $('.layer .loader').show(1000,function(){
-        $('.layer').fadeIn(1000);
-    })
-    if(state){
-        $('.layer').removeClass('d-none');
-        state=false;
-    }
+    // $('.layer .loader').show(1000,function(){
+    //     $('.layer').fadeIn(1000);
+    // })
+    // if(state){
+    //     $('.layer').removeClass('d-none');
+    //     state=false;
+    // }
     var request=await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
     var response=await request.json();
     console.log(response.meals);
-    // displayfoodinformation(response.meals);
+    displayfoodinformation(response.meals);
     
-    setTimeout(()=>{
-        $('.layer .loader').hide(1000,function(){
-            $('.layer').fadeOut(1000);
-            displayfoodinformation(response.meals);
-            $('.layer').addClass('d-none');
+    // setTimeout(()=>{
+    //     $('.layer .loader').hide(1000,function(){
+    //         $('.layer').fadeOut(1000);
+    //         displayfoodinformation(response.meals);
+    //         $('.layer').addClass('d-none');
            
-            state=true;
-        })
+    //         state=true;
+    //     })
        
-    },500)
+    // },500)
   
     
 }
