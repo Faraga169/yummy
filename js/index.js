@@ -45,14 +45,14 @@ const submitbtn = document.getElementById('btnsubmit');
 const input=document.querySelectorAll('input');
 console.log(input)
 const inputs = document.querySelectorAll('.form-control');
-  const  nameregex= /([a-zA-Z0-9_\s]+)/;
-   const emailregex= /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const phoneregex= /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
-    const ageregex= /^([3-9]|[1-6][0-9])$/;
-   const passwordregex= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-  const  repasswordregex= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-  const searchname=document.getElementById('searchname');
-  function validation(regex, input) {
+ const nameregex = /^[a-zA-Z\s]{3,}$/;
+  const emailregex= /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+ const phoneregex= /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+ const ageregex= /^([3-9]|[1-6][0-9])$/;
+  const passwordregex= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+ const repasswordregex= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+ const searchname=document.getElementById('searchname');
+ function validation(regex, input) {
     if (regex.test(input.value)) {
         input.classList.add("is-valid");
         input.classList.remove("is-invalid");
@@ -110,30 +110,11 @@ async function getdefaultFood() {
 
 
 async function getdetails(id){
-    // $('.layer .loader').show(1000,function(){
-    //     $('.layer').fadeIn(1000);
-    // })
-    // if(state){
-    //     $('.layer').removeClass('d-none');
-    //     state=false;
-    // }
     var request=await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
     var response=await request.json();
     console.log(response.meals);
     displayfoodinformation(response.meals);
-    
-    // setTimeout(()=>{
-    //     $('.layer .loader').hide(1000,function(){
-    //         $('.layer').fadeOut(1000);
-    //         displayfoodinformation(response.meals);
-    //         $('.layer').addClass('d-none');
-           
-    //         state=true;
-    //     })
-       
-    // },500)
   
-    
 }
 
 
@@ -169,7 +150,7 @@ async function getfoodbyName(name){
 }
 
 async function getfoodbyLetter(letter){
-    var request=await fetch(`https:www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
+    var request=await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
     var response= await request.json();
     console.log(response);
     displayfoodbyLetter(response.meals);
@@ -228,61 +209,75 @@ async function getingredientname(ingredientname){
 
     document.querySelector('.defaultfood').innerHTML = container;
     
-
-    $('.col-md-4 .items').on('click',function(){
-        let detailsproduct=$(this).attr('id');
-        console.log(detailsproduct);
-        // console.log('Ahmed')
+    
+     $('.defaultfood .items').off('click').on('click', function(){
+        let detailsproduct = $(this).attr('id');
+        console.log("productid: " + detailsproduct);
         $('.defaultfood').addClass('d-none');
         $('.detailsdefaultfood').removeClass('d-none');
         getdetails(detailsproduct);
-    })
-    
+    });
 }
 
 
 
 
-function displayfoodinformation(list){
+function displayfoodinformation(list) {
     var container = '';
-    for (let i = 0; i<list.length; i++) {
-        container += `<div class="col-md-4 mt-5">
+    for (let i = 0; i < list.length; i++) {
+
+        // جمع الـ measures وحذف الـ null/empty
+        let measures = [
+            list[i].strMeasure1, list[i].strMeasure2, list[i].strMeasure3,
+            list[i].strMeasure4, list[i].strMeasure5, list[i].strMeasure6,
+            list[i].strMeasure7, list[i].strMeasure8, list[i].strMeasure9,
+            list[i].strMeasure10
+        ]
+        .filter(m => m && m.trim() !== '')
+        .map(m => `<li class="alert alert-info p-1 m-2">${m}</li>`)
+        .join('');
+
+        let tags = list[i].strTags
+            ? list[i].strTags.split(',').map(t => `<li class="alert alert-danger p-1 m-2">${t.trim()}</li>`).join('')
+            : '<li class="alert alert-danger p-1 m-2">No Tags</li>';
+
+        container += `
+        <div class="col-md-4 mt-5">
             <div class="food-image">
                 <img src="${list[i].strMealThumb}" class="w-100" alt="">
                 <h2 class="text-center">${list[i].strMeal}</h2>
             </div>
         </div>
-        <div class="col-md-8  mt-5 ">
+        <div class="col-md-8 mt-5">
             <div class="instructions text-light">
                 <h2>Instructions</h2>
-                <p>${list[i].strInstructions}</p>
-                <h3>Area : <span class="special">${list[i].strArea}</span></h3>
-                <h3>Category :<span class="special"> ${list[i].strCategory}</span></h3>
+                ${list[i].strInstructions ? list[i].strInstructions
+                         .split(/\r\n|\n/)        
+                         .filter(line => line.trim() !== '') 
+                          .slice(0, 4)             
+                          .map(line => `<p>${line}</p>`)
+                          .join('')
+                           : '<p>No instructions available</p>'
+}
+
+                <h3>Area : <span class="special">${list[i].strArea || 'Unknown'}</span></h3>
+                <h3>Category : <span class="special">${list[i].strCategory || 'Unknown'}</span></h3>
                 <h3>Recipes :</h3>
                 <ul class="list-unstyled d-flex g-3 flex-wrap">
-                    <li class="alert alert-info p-1 m-2">${list[i]. strMeasure1}</li>
-                    <li class="alert alert-info p-1 m-2">${list[i]. strMeasure2}</li>
-                    <li class="alert alert-info p-1 m-2">${list[i]. strMeasure3}</li>
-                    <li class="alert alert-info p-1 m-2">${list[i]. strMeasure4}</li>
-                    <li class="alert alert-info p-1 m-2">${list[i]. strMeasure5}</li>
-                    <li class="alert alert-info p-1 m-2">${list[i]. strMeasure6}</li>
+                    ${measures || '<li class="alert alert-info p-1 m-2">No measures</li>'}
                 </ul>
-                 <h3>Tags :</h3>
-                 <div class="list-unstyled d-flex g-3 flex-wrap">
-                  <li class="alert alert-danger p-1 m-2">${list[i].strTags}</li>
-                 </div>
-                 <div class="food-links mt-2 mb-5">
-                  <a href="${list[i].strSource}" target="_blank" class="btn btn-success">source</a>
-                  <a href="${list[i].strYoutube}" target="_blank" class="btn btn-danger">youtube</a>
-                 </div>
+                <h3>Tags :</h3>
+                <ul class="list-unstyled d-flex g-3 flex-wrap">
+                    ${tags}
+                </ul>
+                <div class="food-links mt-2 mb-5">
+                    ${list[i].strSource ? `<a href="${list[i].strSource}" target="_blank" class="btn btn-success">Source</a>` : ''}
+                    ${list[i].strYoutube ? `<a href="${list[i].strYoutube}" target="_blank" class="btn btn-danger">YouTube</a>` : ''}
+                </div>
             </div>
         </div>`;
     }
-     document.querySelector('.detailsdefaultfood').innerHTML=container;
-    
-
-
-    
+    document.querySelector('.detailsdefaultfood').innerHTML = container;
 }
 
 
@@ -303,18 +298,13 @@ function displayfoodinformation(list){
     document.querySelector('.foodcategory').innerHTML = container;
 
 
-    
-   $('.col-md-4 .items').on('click',function(){
-    let categoryname=$(this).attr('id');
-    console.log(categoryname);
-    console.log("Ahmed")
-    $('.foodcategory').addClass('d-none');
-    $('.categorydetail').removeClass('d-none');
-    getcategorybyname(categoryname);
-   })
-
-    
-
+    $('.foodcategory .items').off('click').on('click', function(){
+        let categoryname = $(this).attr('id');
+        console.log(categoryname);
+        $('.foodcategory').addClass('d-none');
+        $('.categorydetail').removeClass('d-none');
+        getcategorybyname(categoryname);
+    });
    
 
  }
@@ -336,22 +326,13 @@ function displayfoodinformation(list){
 
     document.querySelector('.categorydetail').innerHTML = container;
 
-
-    
-    
-    $('.col-md-4 .items').on('click',function(){
-              let categoryname=$(this).attr("id");
-              console.log(categoryname);
-            $('.categorydetail').addClass('d-none');
-            $('.detailsdefaultfood').removeClass('d-none');
-            getdetails(categoryname);
-        })
-
-    
-
-
-   
-
+    $('.categorydetail .items').off('click').on('click', function(){
+        let id = $(this).attr('id');
+        console.log("Food ID: " + id);
+        $('.categorydetail').addClass('d-none');
+        $('.detailsdefaultfood').removeClass('d-none');
+        getdetails(id);
+    });
  }
 
 
@@ -373,10 +354,9 @@ function displayfoodbyName(list){
 
     document.querySelector('.searchbyname').innerHTML = container;
 
-    $('.items').on('click', function(){
+    $('.searchbyname .items').off('click').on('click', function(){
         let detailsproduct = $(this).attr('id');
-        console.log(searchname);
-        $('#search .row').addClass('d-none');
+        $('#search .searchinputs').addClass('d-none');
         $('.detailsdefaultfood').removeClass('d-none');
         getdetails(detailsproduct);
     });
@@ -397,10 +377,10 @@ function displayfoodbyLetter(list){
 
     document.querySelector('.searchbyname').innerHTML = container;
 
-    $('.items').on('click', function(){
+    $('.searchbyname .items').off('click').on('click', function(){
         let detailsproduct = $(this).attr('id');
         console.log(detailsproduct);
-        $('#search .row').addClass('d-none')
+        $('#search .searchinputs').addClass('d-none');
         $('.detailsdefaultfood').removeClass('d-none');
         getdetails(detailsproduct);
     });
@@ -420,13 +400,13 @@ function displayArea(list){
 
     document.querySelector('.Areadetail ').innerHTML = container;
 
-    $('.areaitems').on('click',function(){
-        let detailsarea=$(this).attr('id');
+    $('.areaitems').off('click').on('click', function(){
+        let detailsarea = $(this).attr('id');
         console.log(detailsarea);
         $('.Areadetail').addClass('d-none');
-        $('.categorydetail').removeClass('d-none')
+        $('.categorydetail').removeClass('d-none');
         getAreabycountry(detailsarea);
-    })
+    });
 }
 
 
@@ -446,14 +426,13 @@ function displayingredient(list){
 
     document.querySelector('.ingredientdetail').innerHTML = container;
 
-    $('.ingredientitem').on('click',function(){
-        let ingredientdetails=$(this).attr('id');
+    $('.ingredientitem').off('click').on('click', function(){
+        let ingredientdetails = $(this).attr('id');
         console.log(ingredientdetails);
-         $('.ingredientdetail').addClass('d-none');
-         $('.categorydetail').removeClass('d-none');
-         getingredientname(ingredientdetails);
-
-    })
+        $('.ingredientdetail').addClass('d-none');
+        $('.categorydetail').removeClass('d-none');
+        getingredientname(ingredientdetails);
+    });
 }
 
 
@@ -481,7 +460,7 @@ $('a[href="#categories"]').on('click',function(){
     $('.foodcategory ').removeClass('d-none');
     $('.defaultfood').addClass('d-none');
     $('.detailsdefaultfood').addClass('d-none');
-    $('#search .row').addClass('d-none');
+    $('#search .searchinputs').addClass('d-none');
     $('.categorydetail').addClass('d-none');
     $('.Areadetail').addClass('d-none');
     $('.ingredientdetail').addClass('d-none');
@@ -500,7 +479,7 @@ $('#searchletter').on('input',function(){
 $('a[href="#Area"]').on('click',function(){
     $('.defaultfood').addClass('d-none');
     $('.detailsdefaultfood').addClass('d-none');
-    $('#search .row').addClass('d-none');
+    $('#search .searchinputs').addClass('d-none');
     $('.categorydetail').addClass('d-none');
     $('.Areadetail').removeClass('d-none');
     $('.ingredientdetail').addClass('d-none');
@@ -512,7 +491,7 @@ $('a[href="#Area"]').on('click',function(){
 $('a[href="#ingredients"]').on('click',function(){
     $('.defaultfood').addClass('d-none');
     $('.detailsdefaultfood').addClass('d-none');
-    $('#search .row').addClass('d-none');
+    $('#search .searchinputs').addClass('d-none');
     $('.categorydetail').addClass('d-none');
     $('.Areadetail').addClass('d-none');
     $('.ingredientdetail').removeClass('d-none');
@@ -525,7 +504,7 @@ $('a[href="#contact"]').on('click',function(){
     $('.contactdetails').removeClass('d-none');
     $('.defaultfood').addClass('d-none');
     $('.detailsdefaultfood').addClass('d-none');
-    $('#search .row').addClass('d-none');
+    $('#search .searchinputs').addClass('d-none');
     $('.categorydetail').addClass('d-none');
     $('.Areadetail').addClass('d-none');
     $('.ingredientdetail').addClass('d-none');
